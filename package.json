@@ -12,7 +12,8 @@
   "dependencies": {
     "discord.js": "^14.10.2",
     "dotenv": "^16.0.3",
-    "finn-jobb": "^1.0.5"
+    "finn-jobb": "^1.0.5",
+    "node-fetch": "^2.6.9"
   },
   "devDependencies": {
     "eslint": "^8.39.0"

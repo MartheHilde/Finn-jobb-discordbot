@@ -4,7 +4,7 @@ const { token, channelID } = require('./config.json');
 const fetch = require('node-fetch');
 // eslint-disable-next-line no-undef
 globalThis.fetch = fetch;
-const getJobs = require('finn-jobb');
+const { getJobs } = require('finn-jobb');
 
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -17,14 +17,16 @@ client.once(Events.ClientReady, async (c) => {
     const channel = await client.channels.fetch(channelID);
     if (!channel) return console.error('Invalid channel ID in config.json');
 
-    // Fetch jobs
-    const jobs = await getJobs();
+    // Fetch FINN.NO jobs
+    const finnJobs = await getJobs({
+        getFinnJobs: true,
+    });
 
     // Create messages
     const messages = [];
     let currentMessage = '';
 
-    for (const job of jobs) {
+    for (const job of finnJobs) {
         const jobContent = `**${job.tekst}**\nLocation: ${job.lokasjon}\nDate: ${job.dato}\nLink: ${job.link}`;
 
         if (currentMessage.length + jobContent.length > 2000) {
@@ -46,8 +48,41 @@ client.once(Events.ClientReady, async (c) => {
             content: message,
             flags: MessageFlags.SuppressEmbeds, // Disable link previews
         });
-        console.log(`Sent message ${i + 1} of ${messages.length}`);
+        console.log(`Sent message for FINN ${i + 1} of ${messages.length}`);
     }
+
+    //Fetch KODE24.no JOBS
+    const kodeJobs = await getJobs({
+        getKode24Jobs: true,
+    });
+
+    for (const kodejob of kodeJobs) {
+        const jobContent = `**${kodejob.tekst}**\nLocation: ${kodejob.lokasjon}\nDate: ${kodejob.dato}\nLink: ${kodejob.id}`;
+
+        if (currentMessage.length + jobContent.length > 2000) {
+            messages.push(currentMessage);
+            currentMessage = '';
+        }
+
+        currentMessage += `${jobContent}\n\n`;
+    }
+
+    if (currentMessage.length > 0) {
+        messages.push(currentMessage);
+    }
+
+    // Send messages
+    for (let i = 0; i < messages.length; i++) {
+        const message = messages[i];
+        await channel.send({
+            content: message,
+            flags: MessageFlags.SuppressEmbeds, // Disable link previews
+        });
+        console.log(`Sent message for Kode24 ${i + 1} of ${messages.length}`);
+    }
+    //End application
+    console.log("Ending process... Thank you for your service!")
+    process.exit(0);
 });
 
 // Login with the token

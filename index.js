@@ -100,7 +100,9 @@ async function fetchAndSendJobs() {
 }
 
 // Schedule the job to run every Friday at 12 pm
-schedule.scheduleJob('0 12 * * 5', function () {
-    console.log('Running job-finder at 12 pm on Fridays');
+// schedule.scheduleJob('0 12 * * 5', function () {
+    schedule.scheduleJob('* * * * *', function () {
+        //TEST
+    console.log('TESTING Running job-finder at 12 pm on Fridays');
     fetchAndSendJobs();
 });

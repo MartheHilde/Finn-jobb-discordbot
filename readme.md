@@ -18,6 +18,7 @@ To install the application, follow these steps:
 - "dotenv": "^16.0.3",
 - "finn-jobb": "1.0.7",
 - "node-fetch": "^2.6.9"
+- "node-schedule": "^2.1.1"
 
 ## Usage
 

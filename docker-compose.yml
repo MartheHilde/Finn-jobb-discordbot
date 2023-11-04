@@ -1,0 +1,8 @@
+version: '3.5'
+
+services:
+  jobb-bot:
+    build: .
+    restart: unless-stopped
+
+# Tar inn env-file automagisk
